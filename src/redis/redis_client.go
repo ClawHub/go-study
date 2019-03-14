@@ -6,12 +6,17 @@ import (
 	"go-study/src/document"
 )
 
+//redis单机客户端
 var client *redis.Client
+
+//redis集群客户端
 var redisClusterClient *redis.ClusterClient
 
+//redis配置
+var cfg configRedis
+
 func init() {
-	//redis配置
-	var cfg configRedis
+
 	//用了配置文件读取
 	if err := document.Properties.Decode(&cfg); err != nil {
 		fmt.Println("err", err)
