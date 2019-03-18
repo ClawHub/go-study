@@ -1,9 +1,10 @@
 package redis
 
 import (
-	"fmt"
 	"github.com/go-redis/redis"
 	"go-study/src/document"
+	"go-study/src/log"
+	"go.uber.org/zap"
 )
 
 //redis单机客户端
@@ -19,9 +20,8 @@ func init() {
 
 	//用了配置文件读取
 	if err := document.Properties.Decode(&cfg); err != nil {
-		fmt.Println("err", err)
+		log.LmdbLogger.Error("read document fail", zap.Error(err))
 	}
-	fmt.Println(cfg)
 
 	//判断是否为集群配置
 	if cfg.Cluster {
@@ -32,7 +32,7 @@ func init() {
 		})
 		//Ping
 		ping, err := redisClusterClient.Ping().Result()
-		fmt.Println(ping, err)
+		log.LmdbLogger.Info("Redis Ping", zap.String("ping", ping), zap.Error(err))
 
 	} else {
 		//Redis客户端，由零个或多个基础连接组成的池。它对于多个goroutine的并发使用是安全的。
@@ -44,7 +44,7 @@ func init() {
 		})
 		//Ping
 		pong, err := client.Ping().Result()
-		fmt.Println(pong, err)
+		log.LmdbLogger.Info("Redis Ping", zap.String("pong", pong), zap.Error(err))
 	}
 
 }

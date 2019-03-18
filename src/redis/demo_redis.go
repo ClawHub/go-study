@@ -1,30 +1,31 @@
 package redis
 
 import (
-	"fmt"
 	"github.com/go-redis/redis"
+	"go-study/src/log"
+	"go.uber.org/zap"
 )
 
 func DemoRedis() {
-	fmt.Println("------redis---------")
+	log.LmdbLogger.Info("------redis---------")
 	err := client.Set("key", "value", 0).Err()
 	if err != nil {
-		panic(err)
+		log.LmdbLogger.Error("client.Set fail", zap.Error(err))
 	}
 
 	val, err := Get("key").Result()
 	if err != nil {
-		panic(err)
+		log.LmdbLogger.Error("client.Get fail", zap.Error(err))
 	}
-	fmt.Println("key", val)
+	log.LmdbLogger.Info("client.Get", zap.String("val", val))
 
 	val2, err := Get("key2").Result()
 	if err == redis.Nil {
-		fmt.Println("key2 does not exist")
+		log.LmdbLogger.Info("key2 does not exist")
 	} else if err != nil {
-		panic(err)
+		log.LmdbLogger.Error("client.Get fail", zap.Error(err))
 	} else {
-		fmt.Println("key2", val2)
+		log.LmdbLogger.Info("client.Get", zap.String("val2", val2))
 	}
 	//订阅
 	sub := Subscribe("channel")
@@ -34,9 +35,9 @@ func DemoRedis() {
 			//发布
 			pub := Publish("channel", "message")
 			if pub.Err() != nil {
-				fmt.Println("Publish err", "message")
+				log.LmdbLogger.Error("Publish err", zap.String("message", "message"), zap.Error(pub.Err()))
 			} else {
-				fmt.Println("Publish msg", "message")
+				log.LmdbLogger.Info("Publish msg", zap.String("message", "message"))
 			}
 		}
 	}()
@@ -44,9 +45,9 @@ func DemoRedis() {
 	//从订阅获取信息，获取一次则程序结束
 	msg, err := sub.ReceiveMessage()
 	if err != nil {
-		fmt.Println("Subscribe err", err)
+		log.LmdbLogger.Error("Subscribe err", zap.Error(err))
 	} else {
-		fmt.Println("Subscribe msg", msg)
+		log.LmdbLogger.Info("Subscribe msg", zap.String("msg", msg.String()))
 	}
 
 }
