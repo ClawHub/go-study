@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>upload</title>
+</head>
+<body>
+<h3>Single Upload</h3>
+<form action="/upload" , method="post" enctype="multipart/form-data">
+    <input type="text" value="hello gin"/>
+    <input type="file" name="upload"/>
+    <input type="submit" value="upload"/>
+</form>
+
+
+<h3>Multi Upload</h3>
+<form action="/multi/upload" , method="post" enctype="multipart/form-data">
+    <input type="text" value="hello gin"/>
+    <input type="file" name="upload"/>
+    <input type="file" name="upload"/>
+    <input type="submit" value="upload"/>
+</form>
+
+</body>
+</html>
